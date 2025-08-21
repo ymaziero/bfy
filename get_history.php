@@ -1,7 +1,6 @@
 <?php
 header('Content-Type: application/json');
 
-// Configurações do banco de dados
 $host = 'localhost';
 $user = 'root';
 $pass = '';
@@ -13,7 +12,6 @@ if ($conn->connect_error) {
     exit;
 }
 
-// Receber dados do POST
 $input = json_decode(file_get_contents('php://input'), true);
 $page = isset($input['page']) ? (int)$input['page'] : 1;
 $filters = isset($input['filters']) ? $input['filters'] : [];
@@ -26,7 +24,6 @@ $where = [];
 $params = [];
 $types = '';
 
-// Filtros
 if (!empty($filters['search'])) {
     $where[] = '(local LIKE ? OR boleto LIKE ?)';
     $params[] = '%' . $filters['search'] . '%';
@@ -66,7 +63,6 @@ if (!empty($filters['dateTo'])) {
 
 $whereSql = $where ? 'WHERE ' . implode(' AND ', $where) : '';
 
-// Ordenação
 switch ($sort) {
     case 'date-asc':
         $orderBy = 'ORDER BY data_criacao ASC';
@@ -100,7 +96,6 @@ while ($row = $result->fetch_assoc()) {
     $items[] = $row;
 }
 
-// Buscar empresas para o filtro
 $companies = [];
 $companyResult = $conn->query('SELECT DISTINCT local FROM boletos');
 while ($row = $companyResult->fetch_assoc()) {

@@ -54,7 +54,6 @@ body {
     padding-bottom: 80px;
 }
 
-/* Header */
 .header {
     background: var(--header-bg);
     color: var(--section-text);
@@ -139,7 +138,6 @@ body {
     justify-content: center;
 }
 
-/* Main Content */
 .main-content {
     padding: 20px;
     display: flex;
@@ -148,7 +146,6 @@ body {
     min-height: calc(100vh - 80px - 60px);
 }
 
-/* Form Section */
 .form-section {
     margin-bottom: 25px;
     width: 100%;
@@ -231,7 +228,6 @@ body {
     background: linear-gradient(135deg, var(--danger), #f87171);
 }
 
-/* Bottom Navigation */
 .bottom-nav {
     position: fixed;
     bottom: 0;
@@ -281,7 +277,6 @@ body {
     font-weight: 500;
 }
 
-/* Popup */
 .popup {
     position: fixed;
     top: 20px;
@@ -307,7 +302,6 @@ body {
     background: var(--danger);
 }
 
-/* Responsive */
 @media (max-width: 375px) {
     .form-group input {
         font-size: 12px;

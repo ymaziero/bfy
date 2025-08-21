@@ -6,13 +6,11 @@
     <title>Boletos AI - Digitalização Inteligente</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Incluir jsPDF e autoTable -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
     <link rel="stylesheet" href="css/inicio.css">
 </head>
 <body>
-    <!-- Header -->
     <header class="header">
         <div class="header-content">
             <div class="logo">
@@ -31,9 +29,7 @@
         </div>
     </header>
 
-    <!-- Main Content -->
     <main class="main-content">
-        <!-- Welcome Section -->
         <section class="welcome-section">
             <h2 class="welcome-title">Olá, seja bem-vindo!</h2>
             <p class="welcome-subtitle">Digitalize seus boletos com inteligência artificial</p>
@@ -50,7 +46,6 @@
             </div>
         </section>
 
-        <!-- Quick Actions -->
         <section class="quick-actions">
             <h3 class="section-title">Ações Rápidas</h3>
             <div class="actions-grid">
@@ -86,7 +81,6 @@
             </div>
         </section>
 
-        <!-- Result Section -->
         <section class="result-section" id="result-section" style="display: none;">
             <h3 class="section-title">Resultado do Processamento</h3>
             <div class="result-card">
@@ -117,7 +111,6 @@
             </div>
         </section>
 
-        <!-- Recent Activity -->
         <section class="recent-activity">
             <h3 class="section-title">Atividade Recente</h3>
             <div class="activity-list">
@@ -157,14 +150,12 @@
         </section>
     </main>
 
-    <!-- Main Action Button -->
     <div class="main-action">
         <button class="scan-button" onclick="scanDocument()">
             <i class="fas fa-camera"></i>
         </button>
     </div>
 
-    <!-- Bottom Navigation (apenas para mobile) -->
     <nav class="bottom-nav">
         <div class="nav-container">
             <a href="#" class="nav-item active">
@@ -186,30 +177,24 @@
         </div>
     </nav>
 
-    <!-- Loading Overlay -->
     <div class="loading" id="loading">
         <div class="loading-spinner"></div>
     </div>
 
-    <!-- Hidden File Input -->
     <input type="file" id="file-input" accept="image/*" style="display: none;">
 
-    <!-- Modal for PDF Download Options -->
     <div id="pdf-modal" class="modal" style="display: none;">
         <div class="modal-content pdf-modal-content">
             <span class="close" onclick="closeModal()">×</span>
             <h3>Opções de Download de PDF</h3>
             <p class="modal-subtitle">Selecione como deseja baixar os relatórios dos boletos processados</p>
-            <div class="pdf-options-container" id="pdf-options">
-                <!-- Opções serão preenchidas dinamicamente via JavaScript -->
-            </div>
+            <div class="pdf-options-container" id="pdf-options"></div>
             <div class="modal-actions">
                 <button class="action-button secondary" onclick="closeModal()">Cancelar</button>
             </div>
         </div>
     </div>
 
-    <!-- Modal for Displaying Identified Bolets -->
     <div id="boletos-modal" class="modal" style="display: none;">
         <div class="modal-content boletos-modal-content">
             <span class="close" onclick="closeBoletosModal()">×</span>

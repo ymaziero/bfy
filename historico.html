@@ -6,14 +6,12 @@
     <title>Histórico de Boletos - Boletos AI</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Incluir jsPDF e autoTable -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
     <link rel="stylesheet" href="css/inicio.css">
     <link rel="stylesheet" href="css/historico.css">
 </head>
 <body>
-    <!-- Header -->
     <header class="header">
         <div class="header-content">
             <div class="logo">
@@ -30,9 +28,8 @@
                 </button>
             </div>
         </div>
-    </header><!-- Main Content -->
+    </header>
     <main class="main-content">
-        <!-- History Section -->
         <section class="history-section">
             <div class="page-header">
                 <h2 class="section-title">Histórico</h2>
@@ -47,22 +44,15 @@
                     </div>
                 </div>
             </div>
-
             <div class="filters">
                 <div class="search-box">
                     <i class="fas fa-search"></i>
                     <input type="text" placeholder="Buscar por empresa ou documento..." id="search-input">
                 </div>
                 <div class="status-tabs">
-                    <button class="status-tab active" data-status="all">
-                        Todos
-                    </button>
-                    <button class="status-tab" data-status="pending">
-                        Pendentes
-                    </button>
-                    <button class="status-tab" data-status="paid">
-                        Pagos
-                    </button>
+                    <button class="status-tab active" data-status="all">Todos</button>
+                    <button class="status-tab" data-status="pending">Pendentes</button>
+                    <button class="status-tab" data-status="paid">Pagos</button>
                 </div>
                 <div class="filter-actions">
                     <button class="action-button secondary" onclick="toggleFilterModal()">
@@ -75,24 +65,19 @@
                     </button>
                 </div>
             </div>
-
-            <div class="history-list" id="history-list">
-                <!-- Cada boleto será uma única div criada via JS -->
-            </div>
-
+            <div class="history-list" id="history-list"></div>
             <div class="empty-state" id="empty-state" style="display: none;">
                 <i class="fas fa-file-invoice fa-3x"></i>
                 <h3>Nenhum boleto encontrado</h3>
                 <p>Tente ajustar os filtros ou fazer uma nova busca</p>
             </div>
-
             <div class="load-more">
                 <button id="load-more-btn" onclick="loadMoreHistory()">
                     Carregar mais <i class="fas fa-chevron-down"></i>
                 </button>
             </div>
         </section>
-    </main>    <!-- Bottom Navigation (apenas para mobile) -->
+    </main>
     <nav class="bottom-nav">
         <div class="nav-container">
             <a href="index.html" class="nav-item">
@@ -113,13 +98,9 @@
             </a>
         </div>
     </nav>
-
-    <!-- Loading Overlay -->
     <div class="loading" id="loading">
         <div class="loading-spinner"></div>
     </div>
-
-    <!-- Filter Modal -->
     <div id="filter-modal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="toggleFilterModal()">×</span>
@@ -161,8 +142,6 @@
             </div>
         </div>
     </div>
-
-    <!-- Sort Modal -->
     <div id="sort-modal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="toggleSortModal()">×</span>
@@ -186,7 +165,6 @@
             </div>
         </div>
     </div>
-
     <script src="js/historico.js"></script>
 </body>
 </html>

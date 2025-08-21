@@ -1,4 +1,3 @@
-// Cache DOM elements for performance
 const DOM = {
     body: document.body,
     themeIcon: document.getElementById('theme-icon'),
@@ -12,9 +11,8 @@ const DOM = {
     pdfOptions: document.getElementById('pdf-options')
 };
 
-let boletoData = null; // Store boletos for PDF generation and sharing
+let boletoData = null;
 
-// Toggle theme between light and dark
 function toggleTheme() {
     if (!DOM.themeIcon) {
         console.error('Theme icon element not found.');
@@ -32,7 +30,6 @@ function toggleTheme() {
     }
 }
 
-// Initialize theme on page load
 document.addEventListener('DOMContentLoaded', () => {
     if (!DOM.themeIcon) {
         console.error('Theme icon element not found.');
@@ -48,7 +45,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-// Show error modal with sanitized message
 function showErrorModal(message) {
     const modal = document.createElement('div');
     modal.className = 'modal';
@@ -74,32 +70,28 @@ function showErrorModal(message) {
     setTimeout(() => modal.classList.add('show'), 10);
 }
 
-// Basic HTML sanitization to prevent XSS
 function sanitizeHTML(str) {
     const div = document.createElement('div');
     div.textContent = str;
     return div.innerHTML;
 }
 
-// Open boletos modal
 function openBoletosModal() {
     if (!DOM.boletosModal) {
         showErrorModal('Modal de boletos não encontrado.');
         return;
     }
-    DOM.boletosModal.style.zIndex = '1000'; // Ensure boletos modal has a defined z-index
+    DOM.boletosModal.style.zIndex = '1000';
     DOM.boletosModal.style.display = 'flex';
     setTimeout(() => DOM.boletosModal.classList.add('show'), 10);
 }
 
-// Close boletos modal
 function closeBoletosModal() {
     if (!DOM.boletosModal) return;
     DOM.boletosModal.classList.remove('show');
     setTimeout(() => DOM.boletosModal.style.display = 'none', 300);
 }
 
-// Trigger file input click
 function scanDocument() {
     if (!DOM.fileInput) {
         showErrorModal('Input de arquivo não encontrado.');
@@ -108,7 +100,6 @@ function scanDocument() {
     DOM.fileInput.click();
 }
 
-// Handle file input change
 DOM.fileInput?.addEventListener('change', async (event) => {
     const file = event.target.files[0];
     if (!file) return;
@@ -143,17 +134,14 @@ DOM.fileInput?.addEventListener('change', async (event) => {
             return;
         }
 
-        // Store boletos
         const novosBoletos = Array.isArray(data.boletos) ? data.boletos : [data];
         boletoData = boletoData ? boletoData.concat(novosBoletos) : novosBoletos;
 
-        // Validate boleto data
         if (!boletoData.every(b => b && typeof b === 'object')) {
             showErrorModal('Dados de boleto inválidos recebidos do servidor.');
             return;
         }
 
-        // Display boletos in table
         DOM.resultTableBody.innerHTML = '';
         boletoData.forEach((boleto, index) => {
             const row = document.createElement('tr');
@@ -171,7 +159,6 @@ DOM.fileInput?.addEventListener('change', async (event) => {
 
         DOM.resultSection.style.display = 'block';
 
-        // Display boletos in modal
         DOM.boletosModalList.innerHTML = '';
         boletoData.forEach((boleto, index) => {
             const boletoItem = document.createElement('div');
@@ -197,19 +184,15 @@ DOM.fileInput?.addEventListener('change', async (event) => {
     }
 });
 
-// Função para enviar mais imagens e somar boletos ao modal
 function scanMoreDocuments() {
     if (!DOM.fileInput) {
         showErrorModal('Input de arquivo não encontrado.');
         return;
     }
-    // Limpa o valor para permitir reenvio do mesmo arquivo
     DOM.fileInput.value = '';
-    // Apenas dispara o clique, o handler principal de 'change' já faz o processamento e soma dos boletos
     DOM.fileInput.click();
 }
 
-// Open PDF modal with higher z-index
 function openPDFModal() {
     if (!boletoData || !boletoData.length) {
         showErrorModal('Nenhum boleto processado para gerar PDFs.');
@@ -221,7 +204,6 @@ function openPDFModal() {
         return;
     }
 
-    // Set higher z-index for pdfModal to appear above boletosModal
     DOM.pdfModal.style.zIndex = '2000';
     DOM.boletosModal.style.zIndex = '1000';
 
@@ -246,20 +228,17 @@ function openPDFModal() {
     setTimeout(() => DOM.pdfModal.classList.add('show'), 10);
 }
 
-// Close generic modal and restore z-index
 function closeModal(modal = DOM.pdfModal) {
     if (!modal) return;
     modal.classList.remove('show');
     setTimeout(() => {
         modal.style.display = 'none';
-        // Restore boletos modal z-index if it is still open
         if (DOM.boletosModal && DOM.boletosModal.style.display === 'flex') {
             DOM.boletosModal.style.zIndex = '1000';
         }
     }, 300);
 }
 
-// Save boleto to database
 async function saveBoletoToDatabase(pdfDataUri, local, valor) {
     const formData = new FormData();
     formData.append('pdf', pdfDataUri.split(',')[1]);
@@ -291,7 +270,6 @@ async function saveBoletoToDatabase(pdfDataUri, local, valor) {
     }
 }
 
-// Generate PDF for a specific local
 function generatePDFByLocal(local) {
     if (!window.jspdf) {
         showErrorModal('Biblioteca jsPDF não carregada.');
@@ -346,7 +324,6 @@ function generatePDFByLocal(local) {
     closeModal();
 }
 
-// Generate PDF único para todos os boletos
 function generatePDFsByLocal() {
     if (!boletoData || !boletoData.length) {
         showErrorModal('Nenhum boleto processado para gerar PDFs.');
@@ -395,12 +372,10 @@ function generatePDFsByLocal() {
 
     const pdfDataUri = doc.output('datauristring');
     doc.save('boletos_todos.pdf');
-    // Salva no banco com local "Todos"
     const totalValor = boletoData.reduce((total, boleto) => total + (parseFloat(boleto.valor) || 0), 0);
     saveBoletoToDatabase(pdfDataUri, 'Todos', totalValor);
     closeModal();
 
-    // Modal de sucesso
     const successModal = document.createElement('div');
     successModal.className = 'modal';
     successModal.innerHTML = `
@@ -423,7 +398,6 @@ function generatePDFsByLocal() {
     setTimeout(() => successModal.classList.add('show'), 10);
 }
 
-// Share via WhatsApp
 function shareWhatsApp() {
     if (!boletoData || !boletoData.length) {
         showErrorModal('Nenhum boleto processado para compartilhar.');
@@ -504,23 +478,18 @@ function shareWhatsApp() {
     setTimeout(() => modal.classList.add('show'), 10);
 }
 
-// Placeholder for view history
 function viewHistory() {
     window.location.href = 'historico.html';
 }
 
-// Placeholder for generate report
 function generateReport() {
     showErrorModal('Funcionalidade de relatório completo em desenvolvimento.');
 }
 
-// Redirect to add company page
 function addCompany() {
     window.location.href = 'adicionar-empresa.html';
 }
 
-
-// Chama ao carregar a página
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', atualizarStatsBoletos);
 } else {

@@ -1,19 +1,13 @@
-// Variáveis globais
 let currentPage = 1;
 let currentFilters = {};
 let currentSort = 'date-desc';
 let isLoading = false;
 let hasAnimatedStats = false;
 
-// Ao carregar a página
 document.addEventListener('DOMContentLoaded', () => {
-    // Carregar tema salvo
     loadTheme();
-    
-    // Carregar histórico inicial
     loadHistory();
     
-    // Configurar evento de busca
     const searchInput = document.getElementById('search-input');
     let searchTimeout;
     searchInput.addEventListener('input', (e) => {
@@ -24,7 +18,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 500);
     });
 
-    // Configurar scroll infinito
     window.addEventListener('scroll', () => {
         if ((window.innerHeight + window.scrollY) >= document.documentElement.scrollHeight - 100) {
             if (!isLoading) {
@@ -36,7 +29,6 @@ document.addEventListener('DOMContentLoaded', () => {
     setupStatusTabs();
 });
 
-// Função para alternar tema
 function toggleTheme() {
     const body = document.body;
     const currentTheme = localStorage.getItem('theme') || 'light';
@@ -49,7 +41,6 @@ function toggleTheme() {
     localStorage.setItem('theme', newTheme);
 }
 
-// Função para carregar tema salvo
 function loadTheme() {
     const savedTheme = localStorage.getItem('theme') || 'light';
     const themeIcon = document.getElementById('theme-icon');
@@ -58,7 +49,6 @@ function loadTheme() {
     themeIcon.className = savedTheme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
 }
 
-// Funções para modais
 function toggleFilterModal() {
     const modal = document.getElementById('filter-modal');
     modal.style.display = modal.style.display === 'none' ? 'block' : 'none';
@@ -69,7 +59,6 @@ function toggleSortModal() {
     modal.style.display = modal.style.display === 'none' ? 'block' : 'none';
 }
 
-// Fechar modais ao clicar fora
 window.onclick = function(event) {
     const filterModal = document.getElementById('filter-modal');
     const sortModal = document.getElementById('sort-modal');
@@ -82,7 +71,6 @@ window.onclick = function(event) {
     }
 }
 
-// Função para aplicar filtros
 function applyFilters() {
     const dateFrom = document.getElementById('date-from').value;
     const dateTo = document.getElementById('date-to').value;
@@ -105,7 +93,6 @@ function applyFilters() {
     toggleFilterModal();
 }
 
-// Função para limpar filtros
 function clearFilters() {
     document.getElementById('date-from').value = '';
     document.getElementById('date-to').value = '';
@@ -120,7 +107,6 @@ function clearFilters() {
     toggleFilterModal();
 }
 
-// Função para configurar ordenação
 function setSortOption(option) {
     const sortOptions = document.querySelectorAll('.sort-option');
     sortOptions.forEach(btn => btn.classList.remove('active'));
@@ -135,14 +121,12 @@ function setSortOption(option) {
     toggleSortModal();
 }
 
-// Configurar cliques nas opções de ordenação
 document.querySelectorAll('.sort-option').forEach(option => {
     option.addEventListener('click', () => {
         setSortOption(option.dataset.sort);
     });
 });
 
-// Função para resetar e recarregar o histórico
 function resetAndReloadHistory() {
     currentPage = 1;
     const historyList = document.getElementById('history-list');
@@ -150,7 +134,6 @@ function resetAndReloadHistory() {
     loadHistory();
 }
 
-// Função para carregar mais histórico
 async function loadMoreHistory() {
     if (isLoading) return;
     
@@ -186,7 +169,6 @@ async function loadMoreHistory() {
     }
 }
 
-// Função para carregar histórico inicial
 async function loadHistory() {
     try {
         const response = await fetch('php/get_history.php', {
@@ -209,7 +191,6 @@ async function loadHistory() {
             historyList.innerHTML = '';
             appendHistoryItems(data.items);
         }
-        // Atualizar lista de empresas no filtro (caso use no futuro)
         if (data.companies) {
             updateCompanyFilter(data.companies);
         }
@@ -219,7 +200,6 @@ async function loadHistory() {
     }
 }
 
-// Função para atualizar o filtro de empresas
 function updateCompanyFilter(companies) {
     const select = document.getElementById('company-filter');
     if (!select) return;
@@ -232,7 +212,6 @@ function updateCompanyFilter(companies) {
     });
 }
 
-// Função para animar números
 function animateNumber(element, to, duration = 800) {
     const from = 0;
     const start = performance.now();
@@ -250,7 +229,6 @@ function animateNumber(element, to, duration = 800) {
     requestAnimationFrame(animate);
 }
 
-// Função para animar valores monetários
 function animateCurrency(element, to, duration = 800) {
     const from = 0;
     const start = performance.now();
@@ -268,7 +246,6 @@ function animateCurrency(element, to, duration = 800) {
     requestAnimationFrame(animate);
 }
 
-// Função para atualizar estatísticas
 function updateStats(items) {
     const totalBoletos = items.length;
     const totalValue = items.reduce((sum, item) => sum + (parseFloat(item.valor) || 0), 0);
@@ -284,10 +261,8 @@ function updateStats(items) {
     }
 }
 
-// Filtro local dos itens exibidos
 function filterItems(items) {
     let filtered = [...items];
-    // Filtro por busca
     const search = (currentFilters.search || '').toLowerCase();
     if (search) {
         filtered = filtered.filter(item =>
@@ -295,26 +270,21 @@ function filterItems(items) {
             (item.boleto && item.boleto.toLowerCase().includes(search))
         );
     }
-    // Filtro por empresa
     if (currentFilters.company) {
         filtered = filtered.filter(item => item.local === currentFilters.company);
     }
-    // Filtro por valor mínimo
     if (currentFilters.valueMin) {
         filtered = filtered.filter(item => parseFloat(item.valor) >= parseFloat(currentFilters.valueMin));
     }
-    // Filtro por valor máximo
     if (currentFilters.valueMax) {
         filtered = filtered.filter(item => parseFloat(item.valor) <= parseFloat(currentFilters.valueMax));
     }
-    // Filtro por status (apenas se status for "salvo" ou outros)
     if (currentFilters.status && currentFilters.status !== 'all') {
         filtered = filtered.filter(item => (item.status || 'salvo') === currentFilters.status);
     }
     return filtered;
 }
 
-// Atualizar tabs de status
 function setupStatusTabs() {
     document.querySelectorAll('.status-tab').forEach(tab => {
         tab.addEventListener('click', function() {
@@ -326,11 +296,9 @@ function setupStatusTabs() {
     });
 }
 
-// Função para adicionar itens ao histórico
 function appendHistoryItems(items) {
     const historyList = document.getElementById('history-list');
     historyList.innerHTML = '';
-    // Aplicar filtros locais
     const filteredItems = filterItems(items);
     updateStats(filteredItems, !hasAnimatedStats);
     if (!hasAnimatedStats) hasAnimatedStats = true;
@@ -369,18 +337,14 @@ function appendHistoryItems(items) {
     });
 }
 
-// Corrige o caminho do PDF para garantir que sempre tenha 'boletos/' no início
 function fixBoletoPath(path) {
-    // Remove qualquer '../', './', ou '/' do início
     let clean = path.replace(/^([.]{1,2}\/?)+/, '');
-    // Garante que começa com 'boletos/'
     if (!clean.startsWith('boletos/')) {
         clean = 'boletos/' + clean.replace(/^boletos\//, '');
     }
     return clean;
 }
 
-// Funções auxiliares
 function getStatusClass(status) {
     if (status === 'salvo') return 'status-saved';
     const statusClasses = {
@@ -413,20 +377,14 @@ function formatCurrency(value) {
     }).format(value);
 }
 
-// Função para mostrar detalhes do boleto
 function showBoletoDetails(item) {
-    // Implementar visualização detalhada do boleto
-    // Pode abrir um modal ou redirecionar para uma página de detalhes
     console.log('Detalhes do boleto:', item);
 }
 
-// Função para mostrar erro
 function showError(message) {
-    // Implementar sistema de notificação de erro
     alert(message);
 }
 
-// Função para baixar PDF automaticamente
 function downloadBoletoPDF(pdfPath) {
     const link = document.createElement('a');
     link.href = pdfPath;

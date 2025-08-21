@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boletos AI - Digitalização Inteligente</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Incluir jsPDF e autoTable -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+    <link rel="stylesheet" href="css/inicio.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">
+                <i class="fas fa-receipt"></i>
+                <h1>Boletos AI</h1>
+            </div>
+            <div class="header-actions">
+                <button class="theme-toggle" onclick="toggleTheme()">
+                    <i class="fas fa-moon" id="theme-icon"></i>
+                </button>
+                <button class="notifications">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge">3</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Welcome Section -->
+        <section class="welcome-section">
+            <h2 class="welcome-title">Olá, seja bem-vindo!</h2>
+            <p class="welcome-subtitle">Digitalize seus boletos com inteligência artificial</p>
+            
+            <div class="stats-container">
+                <div class="stat-item">
+                    <div class="stat-number" id="digitalizados-count">0</div>
+                    <div class="stat-label">Digitalizados</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="total-amount">R$ 0,00</div>
+                    <div class="stat-label">Total</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quick Actions -->
+        <section class="quick-actions">
+            <h3 class="section-title">Ações Rápidas</h3>
+            <div class="actions-grid">
+                <div class="action-card" onclick="scanDocument()">
+                    <i class="fas fa-camera action-icon"></i>
+                    <div class="action-title">Escanear Boleto</div>
+                    <div class="action-subtitle">Tire uma foto e digitalize</div>
+                </div>
+                
+                <div class="action-card" onclick="viewHistory()">
+                    <i class="fas fa-history action-icon"></i>
+                    <div class="action-title">Histórico</div>
+                    <div class="action-subtitle">Ver boletos processados</div>
+                </div>
+                
+                <div class="action-card" onclick="generateReport()">
+                    <i class="fas fa-file-pdf action-icon"></i>
+                    <div class="action-title">Gerar PDF</div>
+                    <div class="action-subtitle">Relatório completo</div>
+                </div>
+                
+                <div class="action-card" onclick="shareWhatsApp()">
+                    <i class="fab fa-whatsapp action-icon"></i>
+                    <div class="action-title">Compartilhar</div>
+                    <div class="action-subtitle">Enviar via WhatsApp</div>
+                </div>
+                
+                <div class="action-card" onclick="addCompany()">
+                    <i class="fas fa-building action-icon"></i>
+                    <div class="action-title">Adicionar Empresa</div>
+                    <div class="action-subtitle">Cadastrar nova empresa</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Result Section -->
+        <section class="result-section" id="result-section" style="display: none;">
+            <h3 class="section-title">Resultado do Processamento</h3>
+            <div class="result-card">
+                <div class="table-responsive">
+                    <table class="result-table">
+                        <thead>
+                            <tr>
+                                <th>Nº</th>
+                                <th>Documento</th>
+                                <th>Empresa</th>
+                                <th>Local</th>
+                                <th>Emissão</th>
+                                <th>Vencimento</th>
+                                <th>Valor</th>
+                            </tr>
+                        </thead>
+                        <tbody id="result-table-body"></tbody>
+                    </table>
+                </div>
+                <div class="result-actions">
+                    <button class="action-button" onclick="openPDFModal()">
+                        <i class="fas fa-download"></i> Baixar PDF
+                    </button>
+                    <button class="action-button whatsapp-button" onclick="shareWhatsApp()">
+                        <i class="fab fa-whatsapp"></i> Enviar via WhatsApp
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recent Activity -->
+        <section class="recent-activity">
+            <h3 class="section-title">Atividade Recente</h3>
+            <div class="activity-list">
+                <div class="activity-item">
+                    <div class="activity-icon">
+                        <i class="fas fa-check"></i>
+                    </div>
+                    <div class="activity-content">
+                        <div class="activity-title">Boleto OCEANO CONFECCAO processado</div>
+                        <div class="activity-time">Há 2 horas</div>
+                    </div>
+                    <div class="activity-status status-success">Concluído</div>
+                </div>
+                
+                <div class="activity-item">
+                    <div class="activity-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="activity-content">
+                        <div class="activity-title">3 boletos aguardando processamento</div>
+                        <div class="activity-time">Há 1 dia</div>
+                    </div>
+                    <div class="activity-status status-pending">Pendente</div>
+                </div>
+                
+                <div class="activity-item">
+                    <div class="activity-icon">
+                        <i class="fas fa-share"></i>
+                    </div>
+                    <div class="activity-content">
+                        <div class="activity-title">PDF enviado via WhatsApp</div>
+                        <div class="activity-time">Há 2 dias</div>
+                    </div>
+                    <div class="activity-status status-success">Enviado</div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Main Action Button -->
+    <div class="main-action">
+        <button class="scan-button" onclick="scanDocument()">
+            <i class="fas fa-camera"></i>
+        </button>
+    </div>
+
+    <!-- Bottom Navigation (apenas para mobile) -->
+    <nav class="bottom-nav">
+        <div class="nav-container">
+            <a href="#" class="nav-item active">
+                <i class="fas fa-home nav-icon"></i>
+                <span class="nav-label">Início</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-file-alt nav-icon"></i>
+                <span class="nav-label">Boletos</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-chart-bar nav-icon"></i>
+                <span class="nav-label">Relatórios</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-cog nav-icon"></i>
+                <span class="nav-label">Ajustes</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Loading Overlay -->
+    <div class="loading" id="loading">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- Hidden File Input -->
+    <input type="file" id="file-input" accept="image/*" style="display: none;">
+
+    <!-- Modal for PDF Download Options -->
+    <div id="pdf-modal" class="modal" style="display: none;">
+        <div class="modal-content pdf-modal-content">
+            <span class="close" onclick="closeModal()">×</span>
+            <h3>Opções de Download de PDF</h3>
+            <p class="modal-subtitle">Selecione como deseja baixar os relatórios dos boletos processados</p>
+            <div class="pdf-options-container" id="pdf-options">
+                <!-- Opções serão preenchidas dinamicamente via JavaScript -->
+            </div>
+            <div class="modal-actions">
+                <button class="action-button secondary" onclick="closeModal()">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Displaying Identified Bolets -->
+    <div id="boletos-modal" class="modal" style="display: none;">
+        <div class="modal-content boletos-modal-content">
+            <span class="close" onclick="closeBoletosModal()">×</span>
+            <h3>Boletos Identificados</h3>
+            <div class="modal-boletos-list" id="boletos-modal-list"></div>
+            <div class="modal-actions">
+                <button class="action-button" onclick="openPDFModal()">
+                    <i class="fas fa-download"></i> Baixar PDF
+                </button>
+                <button class="action-button" onclick="scanMoreDocuments()">
+                    <i class="fas fa-plus"></i> Enviar mais imagens
+                </button>
+                <button class="action-button" onclick="closeBoletosModal()">Fechar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/inicio.js"></script>
+</body>
+</html>
